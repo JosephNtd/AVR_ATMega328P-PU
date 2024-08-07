@@ -10,8 +10,8 @@ volatile bool state = false;
 int main(void) {
     DDRB |= (1 << PB5);
     DDRD &= ~(1 << PD2);
-    EICRA |= (1 << ISC01);
-    EIMSK |= (1 << INT0);
+    EICRA |=(1 << ISC01);
+    EIMSK |=(1 << INT0);
     sei();
     while(1) {
        

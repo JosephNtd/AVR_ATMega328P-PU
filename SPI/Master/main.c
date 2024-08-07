@@ -24,21 +24,22 @@ int main(void){
     DDRD &= ~(1 << PD3);
     PORTD |= (3 << PD2);
     DDRD |= (1 << PD7); 
+    EICRA |= (1 << ISC11)|(1 << ISC01);
+    EIMSK |= (1 << INT1)|(1 << INT0);
+    sei();
     while(1){
-
-        if (!(PIND & (1 << PD2))){
-            PORTD &= ~(1 << PD7); 
-            SPI_MasterTransmit('1');
-            _delay_ms(100);
-            while(!(PIND & (1 << PD2)));
-        }
-        
-        if (!(PIND & (1 << PD3))){
-            PORTD |= (1 << PD7); 
-            SPI_MasterTransmit('2');
-            _delay_ms(100);
-            while(!(PIND & (1 << PD3)));
-        }
     }
     return (0);
+}
+ISR (INT0_vect){   
+	PORTB &= ~(1 << PD7); 
+    SPI_MasterTransmit('1');
+    _delay_ms(100);
+    while(!(EIMSK &(1<<INT0)));
+}
+ISR (INT1_vect){
+    PORTD |= (1 << PD7); 
+    SPI_MasterTransmit('2');
+    _delay_ms(100);
+    while(!(EIMSK &(1<<INT1)));
 }
